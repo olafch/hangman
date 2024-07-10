@@ -1,8 +1,8 @@
 import "./App.css";
+import { getRandomWord } from "./helpers/getRandomWord";
 import { HangImage } from "./components/HangImage";
 import { letters } from "./helpers/letters";
 import { useEffect, useState } from "react";
-import { getRandomWord } from "./helpers/getRandomWord";
 
 export function App() {
 	const [attempts, setAttempts] = useState(0);
@@ -10,6 +10,19 @@ export function App() {
 	const [hiddenWord, setHiddenWord] = useState("_ ".repeat(word.length).trim());
 	const [lose, setLose] = useState(false);
 	const [won, setWon] = useState(false);
+
+	useEffect(() => {
+		if (attempts === 9) {
+			setLose(true);
+		}
+	}, [attempts]);
+
+	useEffect(() => {
+		const currentHiddenWord = hiddenWord.split(" ").join("");
+		if (currentHiddenWord === word) {
+			setWon(true);
+		}
+	}, [hiddenWord]);
 
 	const checkLetter = (letter: string) => {
 		if (lose) return;
@@ -35,19 +48,6 @@ export function App() {
 		setLose(false);
 		setWon(false);
 	};
-
-	useEffect(() => {
-		if (attempts === 9) {
-			setLose(true);
-		}
-	}, [attempts]);
-
-	useEffect(() => {
-		const currentHiddenWord = hiddenWord.split(" ").join("");
-		if (currentHiddenWord === word) {
-			setWon(true);
-		}
-	}, [hiddenWord]);
 
 	return (
 		<div className='App'>
